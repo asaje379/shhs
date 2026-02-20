@@ -1,0 +1,30 @@
+# Exclude from NPM package
+
+# Development files
+.git/
+.github/
+.vscode/
+.idea/
+
+# Documentation (keep main README)
+docs/
+SETUP_COMPLETE.md
+TRANSFORMATION_SUMMARY.txt
+NPM_PUBLISHING.md
+
+# Scripts (users don't need bash script)
+scripts/
+
+# Examples and governance for this repo
+.ai/
+CLAUDE.md
+ARCHITECTURE.md
+
+# Git files
+.gitignore
+.gitattributes
+
+# Other
+*.log
+*.tmp
+.DS_Store
