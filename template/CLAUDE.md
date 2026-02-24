@@ -14,6 +14,7 @@ This project uses a multi-agent AI governance workflow called the **Self-Healing
 | Static Reviewer | `.ai/agents/static-reviewer.md` | Validates structural compliance |
 | QA Validator | `.ai/agents/qa.md` | Validates measurable test results |
 | Debt Observer | `.ai/agents/debt-observer.md` | Detects structural debt and proposes refactors |
+| Architecture Reviewer | `.ai/agents/architecture-reviewer.md` | Independent governance review for long-term scalability risks |
 
 ## Mandatory Execution Order
 
@@ -63,6 +64,19 @@ Every feature MUST follow this pipeline. No step may be skipped.
 | `.ai/memory/anti-patterns.md` | Known anti-patterns to avoid |
 | `.ai/reports/` | Review and analysis reports |
 | `.ai/debt/` | Technical debt reports |
+| `.ai/architecture/governance/` | Architecture review reports and governance audits |
+
+## Periodic Governance Review
+
+The **Architecture Reviewer** operates outside the standard feature pipeline. It should be invoked:
+
+- After every milestone
+- Before major feature additions
+- When technical debt reports accumulate
+- When team velocity decreases
+- On request from any stakeholder
+
+The Architecture Reviewer produces governance reports in `.ai/architecture/governance/` and may propose corrective ADRs.
 
 ## Rules for All Agents
 

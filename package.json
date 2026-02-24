@@ -4,7 +4,7 @@
   "description": "Self-Healing Hybrid Swarm - AI governance system installer",
   "main": "bin/install.js",
   "bin": {
-    "create-shhs": "./bin/install.js"
+    "create-shhs": "bin/install.js"
   },
   "scripts": {
     "test": "node bin/install.js --help"
@@ -25,7 +25,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/asaje379/shhs.git"
+    "url": "git+https://github.com/asaje379/shhs.git"
   },
   "homepage": "https://github.com/asaje379/shhs#readme",
   "bugs": {
