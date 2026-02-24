@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "description": "Architectural fitness function rules",
+  "rules": [
+    {
+      "id": "cross-domain-db-access",
+      "description": "Domain modules must not directly access other domain databases",
+      "condition": {
+        "type": "import_pattern",
+        "pattern": "src/domain-([^/]+)/.*\\.(ts|js) imports (@prisma/client|typeorm|database).*domain-(?!\\1)[^/]+.*"
+      },
+      "threshold": 0,
+      "severity": "BLOCK",
+      "scope": "src/domain-*/**/*.{ts,js}",
+      "remedy": "Use the target domain's public service API instead of direct database access. Example: UserService.getOrdersByUser() instead of prisma.user_orders.findMany()"
+    },
+    {
+      "id": "max-module-dependencies",
+      "description": "No module may have more than 10 direct dependencies",
+      "condition": {
+        "type": "dependency_count",
+        "target": "file"
+      },
+      "threshold": 10,
+      "severity": "WARN",
+      "scope": "src/**/*.{ts,js}",
+      "remedy": "Split into smaller, focused modules. Extract cross-cutting concerns to shared utilities."
+    },
+    {
+      "id": "presentation-layer-isolation",
+      "description": "Presentation layer must not import database layer",
+      "condition": {
+        "type": "import_pattern",
+        "pattern": "src/presentation/.*\\.(ts|tsx|js|jsx) imports (prisma|typeorm|database|@prisma/client).*"
+      },
+      "threshold": 0,
+      "severity": "BLOCK",
+      "scope": "src/presentation/**/*.{ts,tsx,js,jsx}",
+      "remedy": "Use application layer hooks or services. Example: useUsers() hook instead of importing PrismaClient."
+    },
+    {
+      "id": "module-centrality",
+      "description": "No module may be imported by >30% of codebase (god module detection)",
+      "condition": {
+        "type": "centrality",
+        "metric": "incoming_dependencies_percentage"
+      },
+      "threshold": 30,
+      "severity": "WARN",
+      "scope": "src/**/*.{ts,js}",
+      "remedy": "Refactor god module into smaller, specialized modules. Consider using dependency inversion."
+    },
+    {
+      "id": "cyclomatic-complexity",
+      "description": "Function cyclomatic complexity must not exceed 15",
+      "condition": {
+        "type": "complexity",
+        "metric": "cyclomatic"
+      },
+      "threshold": 15,
+      "severity": "WARN",
+      "scope": "src/**/*.{ts,js}",
+      "remedy": "Extract complex conditionals into smaller functions. Apply Single Responsibility Principle."
+    },
+    {
+      "id": "no-circular-dependencies",
+      "description": "No circular dependencies allowed between modules",
+      "condition": {
+        "type": "circular_dependency",
+        "scope": "module"
+      },
+      "threshold": 0,
+      "severity": "BLOCK",
+      "scope": "src/**/*.{ts,js}",
+      "remedy": "Break circular dependency by introducing interface/abstraction or restructuring module relationships."
+    },
+    {
+      "id": "infrastructure-layer-isolation",
+      "description": "Domain layer must not import infrastructure layer",
+      "condition": {
+        "type": "import_pattern",
+        "pattern": "src/domain/.*\\.(ts|js) imports src/infrastructure/.*"
+      },
+      "threshold": 0,
+      "severity": "BLOCK",
+      "scope": "src/domain/**/*.{ts,js}",
+      "remedy": "Use dependency inversion. Define interfaces in domain layer, implement in infrastructure."
+    },
+    {
+      "id": "max-file-length",
+      "description": "No file should exceed 500 lines (excluding comments)",
+      "condition": {
+        "type": "file_length",
+        "metric": "lines_of_code"
+      },
+      "threshold": 500,
+      "severity": "WARN",
+      "scope": "src/**/*.{ts,js,tsx,jsx}",
+      "remedy": "Split large files into smaller, cohesive modules."
+    }
+  ]
+}

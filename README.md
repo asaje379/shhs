@@ -26,18 +26,26 @@ Instead of one AI doing everything, SHHS mimics a mature engineering organizatio
 Install SHHS into any existing project:
 
 ```bash
-# Method 1: NPX (fastest)
+# NPX (recommended)
 npx create-shhs
 
-# Method 2: Git submodule (recommended for tracking updates)
-git submodule add https://github.com/your-org/shhs .shhs
-.shhs/scripts/install.sh
-
-# Method 3: Direct installation
-git clone https://github.com/your-org/shhs /tmp/shhs
-/tmp/shhs/scripts/install.sh .
-rm -rf /tmp/shhs
+# Or install in specific directory
+npx create-shhs /path/to/your/project
 ```
+
+### Updating
+
+Update to the latest SHHS version:
+
+```bash
+# Update to latest
+npx create-shhs update
+
+# Preview changes first
+npx create-shhs update --dry-run
+```
+
+📖 See [UPDATE-GUIDE.md](UPDATE-GUIDE.md) for detailed update instructions.
 
 ### What Gets Installed
 

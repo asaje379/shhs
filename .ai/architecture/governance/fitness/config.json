@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "description": "Fitness Enforcer configuration",
+  "mode": "DETECT",
+  "mode_description": "DETECT mode logs violations but allows merge. PREVENT mode blocks merge on BLOCK-severity violations.",
+  "exemptions_enabled": true,
+  "metrics_retention_days": 365,
+  "report_output": ".ai/reports/fitness-violations.json",
+  "trend_analysis_enabled": true,
+  "settings": {
+    "fail_on_block_violations": false,
+    "fail_on_warn_violations": false,
+    "generate_html_report": true,
+    "html_report_path": ".ai/reports/fitness-dashboard.html",
+    "baseline_mode": false,
+    "baseline_path": ".ai/reports/fitness-baseline.json"
+  },
+  "tools": {
+    "dependency_analysis": {
+      "enabled": true,
+      "tool": "madge",
+      "options": {
+        "circular": true,
+        "exclude": "node_modules"
+      }
+    },
+    "complexity_analysis": {
+      "enabled": true,
+      "tool": "typescript-complexity",
+      "options": {
+        "threshold": 15
+      }
+    },
+    "import_analysis": {
+      "enabled": true,
+      "tool": "eslint",
+      "options": {
+        "parser": "@typescript-eslint/parser"
+      }
+    }
+  },
+  "notes": [
+    "Start with DETECT mode for baseline establishment",
+    "Switch to PREVENT mode once violations are under control",
+    "Review exemptions monthly",
+    "Adjust thresholds based on trend analysis"
+  ]
+}

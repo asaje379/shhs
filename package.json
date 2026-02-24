@@ -38,6 +38,8 @@
     "bin/",
     "template/",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "UPDATE-GUIDE.md",
+    "INSTALLATION-GUIDE.md"
   ]
 }

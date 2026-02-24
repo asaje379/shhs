@@ -18,6 +18,14 @@ const c = (color, text) => `${colors[color]}${text}${colors.reset}`;
 
 // Parse arguments
 const args = process.argv.slice(2);
+
+// Check for update command
+if (args[0] === 'update') {
+  // Delegate to update.js
+  require('./update.js');
+  return;
+}
+
 const targetDir = args[0] || process.cwd();
 
 // Help flag
@@ -29,6 +37,11 @@ ${c('blue', '╚═════════════════════�
 
 ${c('bold', 'Usage:')}
   npx create-shhs [directory]
+  npx create-shhs update [options]
+
+${c('bold', 'Commands:')}
+  (default)      Install SHHS in a directory
+  update         Update existing SHHS installation
 
 ${c('bold', 'Arguments:')}
   [directory]    Target directory (default: current directory)
@@ -37,6 +50,8 @@ ${c('bold', 'Examples:')}
   npx create-shhs               # Install in current directory
   npx create-shhs .             # Install in current directory
   npx create-shhs /path/to/app  # Install in specific directory
+  npx create-shhs update        # Update current directory
+  npx create-shhs update --dry-run  # Preview update changes
 
 ${c('bold', 'Options:')}
   -h, --help     Show this help message
@@ -177,6 +192,11 @@ if (!isGitRepo) {
 }
 
 console.log('');
+
+// Write version file
+const packageJson = require(path.join(__dirname, '..', 'package.json'));
+const versionFilePath = path.join(target, '.ai', '.shhs-version');
+fs.writeFileSync(versionFilePath, packageJson.version, 'utf-8');
 
 // Success message
 console.log(`${c('green', '╔════════════════════════════════════════════════════════╗')}`);

@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "description": "Fitness Enforcer results format",
+  "type": "object",
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of enforcement run"
+    },
+    "commit": {
+      "type": "string",
+      "description": "Git commit SHA being validated"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["DETECT", "PREVENT"],
+      "description": "Enforcement mode"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["PASS", "FAIL"],
+      "description": "Overall status (FAIL if any BLOCK violations in PREVENT mode)"
+    },
+    "violations": {
+      "type": "array",
+      "description": "List of fitness rule violations",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "description": "Unique rule identifier"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["WARN", "BLOCK"],
+            "description": "Violation severity"
+          },
+          "file": {
+            "type": "string",
+            "description": "Relative path to violating file"
+          },
+          "line": {
+            "type": "integer",
+            "description": "Line number of violation (if applicable)"
+          },
+          "measured_value": {
+            "description": "Actual measured value (type varies by rule)",
+            "oneOf": [
+              { "type": "string" },
+              { "type": "number" }
+            ]
+          },
+          "threshold": {
+            "type": "number",
+            "description": "Threshold defined in rule"
+          },
+          "remedy": {
+            "type": "string",
+            "description": "How to fix the violation"
+          }
+        },
+        "required": ["rule_id", "severity", "file", "measured_value", "threshold", "remedy"]
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Aggregate metrics from this run",
+      "properties": {
+        "total_violations": {
+          "type": "integer",
+          "description": "Total number of violations"
+        },
+        "block_violations": {
+          "type": "integer",
+          "description": "Number of BLOCK-severity violations"
+        },
+        "warn_violations": {
+          "type": "integer",
+          "description": "Number of WARN-severity violations"
+        },
+        "files_scanned": {
+          "type": "integer",
+          "description": "Total files analyzed"
+        },
+        "rules_evaluated": {
+          "type": "integer",
+          "description": "Total fitness rules checked"
+        },
+        "dependency_graph_complexity": {
+          "type": "number",
+          "description": "Complexity score of module dependency graph"
+        },
+        "average_module_coupling": {
+          "type": "number",
+          "description": "Average coupling score per module"
+        },
+        "domain_boundary_leaks": {
+          "type": "integer",
+          "description": "Count of cross-domain coupling violations"
+        }
+      },
+      "required": ["total_violations", "block_violations", "warn_violations"]
+    },
+    "trend": {
+      "type": "object",
+      "description": "Comparison with previous run",
+      "properties": {
+        "previous_timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "previous_commit": {
+          "type": "string"
+        },
+        "block_violations_delta": {
+          "type": "integer",
+          "description": "Change in BLOCK violations (negative = improvement)"
+        },
+        "warn_violations_delta": {
+          "type": "integer",
+          "description": "Change in WARN violations (negative = improvement)"
+        },
+        "trend_direction": {
+          "type": "string",
+          "enum": ["IMPROVING", "DEGRADING", "STABLE"],
+          "description": "Overall architectural health trend"
+        }
+      }
+    },
+    "exemptions_applied": {
+      "type": "array",
+      "description": "List of exemptions that suppressed violations",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rule_id": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "expires": {
+            "type": "string",
+            "format": "date"
+          },
+          "adr": {
+            "type": "string",
+            "description": "ADR justifying exemption"
+          }
+        }
+      }
+    }
+  },
+  "required": ["timestamp", "mode", "status", "violations", "metrics"],
+  "example": {
+    "timestamp": "2026-02-24T10:30:00Z",
+    "commit": "abc123def456",
+    "mode": "PREVENT",
+    "status": "FAIL",
+    "violations": [
+      {
+        "rule_id": "cross-domain-db-access",
+        "severity": "BLOCK",
+        "file": "src/domain-billing/services/invoice.service.ts",
+        "line": 42,
+        "measured_value": "import { PrismaClient } from '@prisma/client'; prisma.user_orders.findMany()",
+        "threshold": 0,
+        "remedy": "Use UserService.getOrdersByUser() from domain-user public API instead of direct database access"
+      },
+      {
+        "rule_id": "max-module-dependencies",
+        "severity": "WARN",
+        "file": "src/utils/god-module.ts",
+        "line": null,
+        "measured_value": 14,
+        "threshold": 10,
+        "remedy": "Split into smaller modules: extract email utilities to email-utils.ts, date utilities to date-utils.ts"
+      }
+    ],
+    "metrics": {
+      "total_violations": 2,
+      "block_violations": 1,
+      "warn_violations": 1,
+      "files_scanned": 47,
+      "rules_evaluated": 8,
+      "dependency_graph_complexity": 127,
+      "average_module_coupling": 3.2,
+      "domain_boundary_leaks": 1
+    },
+    "trend": {
+      "previous_timestamp": "2026-02-20T14:15:00Z",
+      "previous_commit": "xyz789abc012",
+      "block_violations_delta": 1,
+      "warn_violations_delta": -2,
+      "trend_direction": "DEGRADING"
+    },
+    "exemptions_applied": []
+  }
+}
