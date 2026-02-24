@@ -25,7 +25,56 @@ Any conflict between layers is resolved by promoting the higher-level rule.
 
 ---
 
-## Article II — Test-Driven Development (Non-Negotiable)
+## Article II — Source Code Location (Non-Negotiable)
+
+All application source code MUST be located in the `app/` directory.
+
+### Directory Structure Mandate
+
+```
+project-root/
+├── app/                    # ALL application code goes here
+│   ├── domain/            # Domain models and business logic
+│   ├── application/       # Application services and use cases
+│   ├── presentation/      # UI components, controllers
+│   ├── infrastructure/    # Database, external services
+│   └── ...                # Other application modules
+├── .ai/                   # SHHS governance (never in app/)
+├── tests/                 # Test files (can mirror app/ structure)
+├── scripts/               # Build/deployment scripts
+├── docs/                  # Documentation
+└── config/                # Configuration files
+```
+
+### Rules
+
+1. **All production code** → `app/`
+2. **All test code** → `tests/` or `app/**/*.test.ts` (co-located)
+3. **No application logic** outside `app/` (except tests)
+4. **No governance files** inside `app/` (`.ai/` stays separate)
+
+### Rationale
+
+- **Clear separation:** Governance vs application code
+- **Tooling compatibility:** Build tools can target `app/` exclusively
+- **Cognitive load reduction:** Developers know where to find all code
+- **Deployment simplicity:** `app/` is self-contained deployable unit
+
+### Enforcement
+
+- Static Reviewer MUST verify all new `.ts`, `.js`, `.tsx`, `.jsx` files are in `app/`
+- Fitness Enforcer rule: `source-code-location` (BLOCK severity)
+- Exception: Configuration files (`package.json`, `tsconfig.json`) at root
+
+### Violations
+
+Creating source code outside `app/` is a **Type 1 violation** (process bypass).
+
+**Consequence:** Immediate rollback + re-implementation in `app/`.
+
+---
+
+## Article III — Test-Driven Development (Non-Negotiable)
 
 All feature development MUST follow TDD cycle:
 
@@ -63,7 +112,7 @@ NONE. No bypass allowed. If TDD is impractical, the feature is incorrectly scope
 
 ---
 
-## Article III — End-to-End Testing (Critical Paths)
+## Article IV — End-to-End Testing (Critical Paths)
 
 All user-facing critical flows MUST have Playwright end-to-end tests.
 
@@ -89,7 +138,7 @@ All user-facing critical flows MUST have Playwright end-to-end tests.
 
 ---
 
-## Article IV — Knowledge Curator (Pre-Architectural Gate)
+## Article V — Knowledge Curator (Pre-Architectural Gate)
 
 No architectural decision may proceed without Knowledge Curator validation.
 
@@ -129,7 +178,7 @@ Developer implements
 
 ---
 
-## Article V — Skills as Enforceable Procedures
+## Article VI — Skills as Enforceable Procedures
 
 Skills are NOT guidelines. They are MANDATORY operating procedures.
 
@@ -157,7 +206,7 @@ Skills have peer authority with Patterns. When conflict arises:
 
 ---
 
-## Article VI — Merge Gates (Definition of Done)
+## Article VII — Merge Gates (Definition of Done)
 
 No code may be merged without satisfying ALL merge gate conditions.
 
@@ -199,14 +248,15 @@ Any gate failure = automatic merge block. No exceptions.
 
 ---
 
-## Article VII — Immutability and Amendment
+## Article VIII — Immutability and Amendment
 
 ### Immutability
 
 This Constitution is IMMUTABLE for:
-- TDD requirement (Article II)
-- Knowledge Curator gate (Article IV)
-- Merge gate structure (Article VI)
+- Source code location requirement (Article II)
+- TDD requirement (Article III)
+- Knowledge Curator gate (Article V)
+- Merge gate structure (Article VII)
 
 ### Amendment Process
 
@@ -224,7 +274,7 @@ Amendments MUST NOT weaken governance. Only clarifications or extensions allowed
 
 ---
 
-## Article VIII — Enforcement and Violations
+## Article IX — Enforcement and Violations
 
 ### Violation Types
 
@@ -244,7 +294,7 @@ Any agent may file a violation report in `.ai/governance/violations/YYYY-MM-DD-d
 
 ---
 
-## Article IX — Bootstrap and Adoption
+## Article X — Bootstrap and Adoption
 
 New projects adopting SHHS MUST:
 

@@ -3,15 +3,37 @@
   "description": "Architectural fitness function rules",
   "rules": [
     {
+      "id": "source-code-location",
+      "description": "All application source code must be in app/ directory (Constitution Article II)",
+      "condition": {
+        "type": "file_location",
+        "pattern": ".*\\.(ts|js|tsx|jsx)$",
+        "exclude": [
+          ".*\\.test\\.(ts|js|tsx|jsx)$",
+          ".*\\.spec\\.(ts|js|tsx|jsx)$",
+          "tests/.*",
+          "\\.ai/.*",
+          "scripts/.*",
+          "bin/.*",
+          "config/.*"
+        ]
+      },
+      "threshold": 0,
+      "severity": "BLOCK",
+      "scope": "!(app|tests|.ai|scripts|bin|config)/**/*.{ts,js,tsx,jsx}",
+      "remedy": "Move source file to app/ directory. Example: src/services/user.ts → app/services/user.ts. Only app/, tests/, and configuration directories are allowed for source code.",
+      "constitutional_basis": "Article II — Source Code Location"
+    },
+    {
       "id": "cross-domain-db-access",
       "description": "Domain modules must not directly access other domain databases",
       "condition": {
         "type": "import_pattern",
-        "pattern": "src/domain-([^/]+)/.*\\.(ts|js) imports (@prisma/client|typeorm|database).*domain-(?!\\1)[^/]+.*"
+        "pattern": "app/domain-([^/]+)/.*\\.(ts|js) imports (@prisma/client|typeorm|database).*domain-(?!\\1)[^/]+.*"
       },
       "threshold": 0,
       "severity": "BLOCK",
-      "scope": "src/domain-*/**/*.{ts,js}",
+      "scope": "app/domain-*/**/*.{ts,js}",
       "remedy": "Use the target domain's public service API instead of direct database access. Example: UserService.getOrdersByUser() instead of prisma.user_orders.findMany()"
     },
     {
@@ -23,7 +45,7 @@
       },
       "threshold": 10,
       "severity": "WARN",
-      "scope": "src/**/*.{ts,js}",
+      "scope": "app/**/*.{ts,js}",
       "remedy": "Split into smaller, focused modules. Extract cross-cutting concerns to shared utilities."
     },
     {
@@ -31,11 +53,11 @@
       "description": "Presentation layer must not import database layer",
       "condition": {
         "type": "import_pattern",
-        "pattern": "src/presentation/.*\\.(ts|tsx|js|jsx) imports (prisma|typeorm|database|@prisma/client).*"
+        "pattern": "app/presentation/.*\\.(ts|tsx|js|jsx) imports (prisma|typeorm|database|@prisma/client).*"
       },
       "threshold": 0,
       "severity": "BLOCK",
-      "scope": "src/presentation/**/*.{ts,tsx,js,jsx}",
+      "scope": "app/presentation/**/*.{ts,tsx,js,jsx}",
       "remedy": "Use application layer hooks or services. Example: useUsers() hook instead of importing PrismaClient."
     },
     {
@@ -47,7 +69,7 @@
       },
       "threshold": 30,
       "severity": "WARN",
-      "scope": "src/**/*.{ts,js}",
+      "scope": "app/**/*.{ts,js}",
       "remedy": "Refactor god module into smaller, specialized modules. Consider using dependency inversion."
     },
     {
@@ -59,7 +81,7 @@
       },
       "threshold": 15,
       "severity": "WARN",
-      "scope": "src/**/*.{ts,js}",
+      "scope": "app/**/*.{ts,js}",
       "remedy": "Extract complex conditionals into smaller functions. Apply Single Responsibility Principle."
     },
     {
@@ -71,7 +93,7 @@
       },
       "threshold": 0,
       "severity": "BLOCK",
-      "scope": "src/**/*.{ts,js}",
+      "scope": "app/**/*.{ts,js}",
       "remedy": "Break circular dependency by introducing interface/abstraction or restructuring module relationships."
     },
     {
@@ -79,11 +101,11 @@
       "description": "Domain layer must not import infrastructure layer",
       "condition": {
         "type": "import_pattern",
-        "pattern": "src/domain/.*\\.(ts|js) imports src/infrastructure/.*"
+        "pattern": "app/domain/.*\\.(ts|js) imports app/infrastructure/.*"
       },
       "threshold": 0,
       "severity": "BLOCK",
-      "scope": "src/domain/**/*.{ts,js}",
+      "scope": "app/domain/**/*.{ts,js}",
       "remedy": "Use dependency inversion. Define interfaces in domain layer, implement in infrastructure."
     },
     {
@@ -95,7 +117,7 @@
       },
       "threshold": 500,
       "severity": "WARN",
-      "scope": "src/**/*.{ts,js,tsx,jsx}",
+      "scope": "app/**/*.{ts,js,tsx,jsx}",
       "remedy": "Split large files into smaller, cohesive modules."
     }
   ]

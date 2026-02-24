@@ -106,8 +106,9 @@ The Architecture Reviewer produces governance reports in `.ai/architecture/gover
 6. Consult `anti-patterns.md` to avoid known mistakes
 7. All architectural changes require an ADR — no exceptions
 8. Feature work requires a contract — no exceptions
-9. **TDD is mandatory** (Constitution Article II) — RED → GREEN → REFACTOR, no bypass
-10. **E2E tests mandatory for critical flows** (Constitution Article III) — Playwright required
-11. **Knowledge Curator gate mandatory** (Constitution Article IV) — No architectural decision without technical validation
-12. **Skills are mandatory procedures** (Constitution Article V) — Not guidelines, enforceable workflows
-13. **Definition of Done is enforced** (Constitution Article VI) — All 6 gates must pass, no merge otherwise
+9. **All source code in app/ directory** (Constitution Article II) — No application code outside app/, no exceptions
+10. **TDD is mandatory** (Constitution Article III) — RED → GREEN → REFACTOR, no bypass
+11. **E2E tests mandatory for critical flows** (Constitution Article IV) — Playwright required
+12. **Knowledge Curator gate mandatory** (Constitution Article V) — No architectural decision without technical validation
+13. **Skills are mandatory procedures** (Constitution Article VI) — Not guidelines, enforceable workflows
+14. **Definition of Done is enforced** (Constitution Article VII) — All 6 gates must pass, no merge otherwise
